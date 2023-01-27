@@ -29,7 +29,7 @@ Now you need to make the following changes to your Hardhat project. The followin
 
 1. `npm install --save-dev hardhat-preprocessor` - [Details on hardhat-preprocessor](https://www.npmjs.com/package/hardhat-preprocessor)
 2. Add `import "hardhat-preprocessor";` to your `hardhat.config.ts` file.
-3. Ensure the following function is present (you can add it to your `hardhat.config.ts` file or somewhere else and import it):
+3. Ensure the following function is present (you can add it to your `hardhat.config.ts` file or somewhere else and import it - also ensure `import fs from "fs";` is present in the file it is added):
 
 ```typescript
 function getRemappings() {
@@ -41,7 +41,7 @@ function getRemappings() {
 }
 ```
 
-*Thanks to [@DrakeEvansV1](https://twitter.com/drakeevansv1) for this snippet*
+*Thanks to [@DrakeEvansV1](https://twitter.com/drakeevansv1) and [@colinnielsen](https://github.com/colinnielsen) for this snippet*
 
 4. Add the following to your exported `HardhatUserConfig` object:
 
@@ -51,11 +51,12 @@ preprocess: {
   eachLine: (hre) => ({
     transform: (line: string) => {
       if (line.match(/^\s*import /i)) {
-        getRemappings().forEach(([find, replace]) => {
-          if (line.match(find)) {
-            line = line.replace(find, replace);
+        for (const [from, to] of getRemappings()) {
+          if (line.includes(from)) {
+            line = line.replace(from, to);
+            break;
           }
-        });
+        }
       }
       return line;
     },
@@ -80,7 +81,7 @@ Before we start, let's take a look at the directories:
 
 - Contracts are in `contracts`
 - Hardhat unit test is in `test`, and we will put Foundry test files in `test/foundry`
-- Hardhat puts its cache in `cache`, ann we will put Foundry cache in `forge-cache`
+- Hardhat puts its cache in `cache`, and we will put Foundry cache in `forge-cache`
 
 ### 4 steps to add Foundry test
 

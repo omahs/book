@@ -31,6 +31,7 @@ Below are some subsections for the different Forge cheatcodes.
 - [Utilities](./utilities.md): Smaller utility cheatcodes
 - [Forking](./forking.md): Forking mode cheatcodes
 - [Snapshots](./snapshots.md): Snapshot cheatcodes
+- [RPC](./rpc.md): RPC related cheatcodes
 - [File](./fs.md): Cheatcodes for working with files
 
 ### Cheatcodes Interface
@@ -74,10 +75,10 @@ interface CheatCodes {
     // Computes address for a given private key
     function addr(uint256 privateKey) external returns (address);
 
-    // Derive a private key from a provided mnenomic string,
-    // or mnenomic file path, at the derivation path m/44'/60'/0'/0/{index}.
+    // Derive a private key from a provided mnemonic string,
+    // or mnemonic file path, at the derivation path m/44'/60'/0'/0/{index}.
     function deriveKey(string calldata, uint32) external returns (uint256);
-    // Derive a private key from a provided mnenomic string, or mnenomic file path,
+    // Derive a private key from a provided mnemonic string, or mnemonic file path,
     // at the derivation path {path}{index}
     function deriveKey(string calldata, string calldata, uint32) external returns (uint256);
 
@@ -125,6 +126,24 @@ interface CheatCodes {
     function envBytes(string calldata, string calldata)
         external
         returns (bytes[] memory);
+
+    // Read environment variables with default value, (name, value) => (value)
+    function envOr(string calldata, bool) external returns (bool);
+    function envOr(string calldata, uint256) external returns (uint256);
+    function envOr(string calldata, int256) external returns (int256);
+    function envOr(string calldata, address) external returns (address);
+    function envOr(string calldata, bytes32) external returns (bytes32);
+    function envOr(string calldata, string calldata) external returns (string memory);
+    function envOr(string calldata, bytes calldata) external returns (bytes memory);
+    
+    // Read environment variables as arrays with default value, (name, value[]) => (value[])
+    function envOr(string calldata, string calldata, bool[] calldata) external returns (bool[] memory);
+    function envOr(string calldata, string calldata, uint256[] calldata) external returns (uint256[] memory);
+    function envOr(string calldata, string calldata, int256[] calldata) external returns (int256[] memory);
+    function envOr(string calldata, string calldata, address[] calldata) external returns (address[] memory);
+    function envOr(string calldata, string calldata, bytes32[] calldata) external returns (bytes32[] memory);
+    function envOr(string calldata, string calldata, string[] calldata) external returns (string[] memory);
+    function envOr(string calldata, string calldata, bytes[] calldata) external returns (bytes[] memory);
 
     // Convert Solidity types to strings
     function toString(address) external returns(string memory);
@@ -207,8 +226,10 @@ interface CheatCodes {
     // Calldata can either be strict or a partial match
     function expectCall(address, uint256, bytes calldata) external;
 
-    // Gets the bytecode for a contract in the project given the path to the contract.
+    // Gets the _creation_ bytecode from an artifact file. Takes in the relative path to the json file
     function getCode(string calldata) external returns (bytes memory);
+    // Gets the _deployed_ bytecode from an artifact file. Takes in the relative path to the json file
+    function getDeployedCode(string calldata) external returns (bytes memory);
 
     // Label an address in test traces
     function label(address addr, string calldata label) external;
@@ -255,6 +276,11 @@ interface CheatCodes {
     // - The user lacks permissions to remove the file.
     // (path) => ()
     function removeFile(string calldata) external;
+    
+    // Return the value(s) that correspond to 'key'
+    function parseJson(string memory json, string memory key) external returns (bytes memory);
+    // Return the entire json file
+    function parseJson(string memory json) external returns (bytes memory);
 
     // Snapshot the current state of the evm.
     // Returns the id of the snapshot that was created.
@@ -294,6 +320,11 @@ interface CheatCodes {
     function rollFork(uint256) external;
     // Updates the given fork to given block number
     function rollFork(uint256 forkId, uint256 blockNumber) external;
+
+    // Fetches the given transaction from the active fork and executes it on the current state
+    function transact(bytes32) external;
+    // Fetches the given transaction from the given fork and executes it on the current state
+    function transact(uint256, bytes32) external;
 
     // Marks that the account(s) should use persistent storage across
     // fork swaps in a multifork setup, meaning, changes made to the state

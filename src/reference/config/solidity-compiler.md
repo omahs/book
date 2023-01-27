@@ -54,6 +54,20 @@ If set to `false`, only the remappings in `foundry.toml` and `remappings.txt` ar
 - Default: none
 - Environment: `FOUNDRY_ALLOW_PATHS` or `DAPP_ALLOW_PATHS`
 
+Tells solc to allow reading source files from additional directories. This is mainly relevant for complex workspaces managed by `pnmp` or similar.
+
+See also [solc allowed-paths](https://docs.soliditylang.org/en/latest/path-resolution.html#allowed-paths)
+
+##### `include_paths`
+
+- Type: array of strings (paths)
+- Default: none
+- Environment: `FOUNDRY_INCLUDE_PATHS` or `DAPP_INCLUDE_PATHS`
+
+Make an additional source directory available to the default import callback. Use this option if you want to import contracts whose location is not fixed in relation to your main source tree, e.g. third-party libraries installed using a package manager. Can be used multiple times. Can only be used if base path has a non-empty value.
+
+See also [solc path resolution](https://docs.soliditylang.org/en/latest/path-resolution.html)
+
 ##### `libraries`
 
 - Type: array of strings (libraries)
@@ -94,11 +108,35 @@ If both `offline` and `auto-detect-solc` are set to `true`, the required version
 
 ##### `ignored_error_codes`
 
-- Type: array of integers
+- Type: array of integers/strings
 - Default: none for source, SPDX license identifiers and contract size for tests
 - Environment: `FOUNDRY_IGNORED_ERROR_CODES` or `DAPP_IGNORED_ERROR_CODES`
 
 An array of Solidity compiler error codes to ignore during build, such as warnings.
+
+Valid values are:
+
+- `license`: 1878
+- `code-size`: 5574
+- `func-mutability`: 2018
+- `unused-var`: 2072
+- `unused-param`: 5667
+- `unused-return`: 9302
+- `virtual-interfaces`: 5815
+- `missing-receive-ether`: 3628
+- `shadowing`: 2519
+- `same-varname`: 8760
+- `unnamed-return`: 6321
+- `unreachable`: 5740
+- `pragma-solidity`: 3420
+
+##### `deny_warnings`
+
+- Type: boolean
+- Default: false
+- Environment: `FOUNDRY_DENY_WARNINGS` or `DAPP_DENY_WARNINGS`
+
+If enabled, Foundry will treat Solidity compiler warnings as errors, stopping artifacts from being written to disk.
 
 ##### `evm_version`
 

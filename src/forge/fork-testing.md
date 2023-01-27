@@ -38,7 +38,7 @@ Forking is especially useful when you need to interact with existing contracts. 
 
 If both `--fork-url` and `--fork-block-number` are specified, then data for that block is cached for future test runs.
 
-The data is cached in `~/.foundry/cache/<chain id>/<block number>`. To clear the cache, simply remove the directory or run [`forge clean`](../reference/forge/forge-clean.md) (removes all build artifacts and cache directories).
+The data is cached in `~/.foundry/cache/rpc/<chain name>/<block number>`. To clear the cache, simply remove the directory or run [`forge clean`](../reference/forge/forge-clean.md) (removes all build artifacts and cache directories).
 
 It is also possible to ignore the cache entirely by passing `--no-storage-caching`, or with `foundry.toml` by configuring [`no_storage_caching`](../reference/config/testing.md#no_storage_caching) and [`rpc_storage_caching`](../reference/config/testing.md#rpc_storage_caching).
 
@@ -70,7 +70,7 @@ Enabling a specific fork is done via passing that `forkId` to [`selectFork`](../
 
 There can only be one fork active at a time, and the identifier for the currently active fork can be retrieved via [`activeFork`](../cheatcodes/active-fork.md).
 
-Similar to [`roll`](../cheatcodes/roll.md), you can set `block.timestamp` of a fork with [`rollFork`](../cheatcodes/roll-fork.md).
+Similar to [`roll`](../cheatcodes/roll.md), you can set `block.number` of a fork with [`rollFork`](../cheatcodes/roll-fork.md).
 
 To understand what happens when a fork is selected, it is important to know how the forking mode works in general:
 
@@ -94,7 +94,7 @@ contract ForkTest is Test {
     //Access variables from .env file via vm.envString("varname")
     //Replace ALCHEMY_KEY by your alchemy key or Etherscan key, change RPC url if need
     //inside your .env file e.g: 
-    //MAINNET_RPC_URL = 'https://eth-mainnet.g.alchemy.com//v2/ALCHEMY_KEY'
+    //MAINNET_RPC_URL = 'https://eth-mainnet.g.alchemy.com/v2/ALCHEMY_KEY'
     //string MAINNET_RPC_URL = vm.envString("MAINNET_RPC_URL");
     //string OPTIMISM_RPC_URL = vm.envString("OPTIMISM_RPC_URL");
 
@@ -134,8 +134,8 @@ contract ForkTest is Test {
         assertEq(vm.activeFork(), anotherFork);
     }
 
-    // set `block.timestamp` of a fork
-    function testCanSetForkBlockTimestamp() public {
+    // set `block.number` of a fork
+    function testCanSetForkBlockNumber() public {
         vm.selectFork(mainnetFork);
         vm.rollFork(1_337_000);
 
@@ -161,7 +161,7 @@ contract ForkTest is Test {
     //Access variables from .env file via vm.envString("varname")
     //Replace ALCHEMY_KEY by your alchemy key or Etherscan key, change RPC url if need
     //inside your .env file e.g: 
-    //MAINNET_RPC_URL = 'https://eth-mainnet.g.alchemy.com//v2/ALCHEMY_KEY'
+    //MAINNET_RPC_URL = 'https://eth-mainnet.g.alchemy.com/v2/ALCHEMY_KEY'
     //string MAINNET_RPC_URL = vm.envString("MAINNET_RPC_URL");
     //string OPTIMISM_RPC_URL = vm.envString("OPTIMISM_RPC_URL");
 

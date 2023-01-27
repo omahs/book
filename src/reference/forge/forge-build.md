@@ -6,7 +6,7 @@ forge-build - Build the project's smart contracts.
 
 ### SYNOPSIS
 
-``forge build`` [*options*]
+``forge build`` or ``forge b`` [*options*]
 
 ### DESCRIPTION
 
@@ -38,6 +38,54 @@ You can enable the optimizer by passing `--optimize`, and you can adjust the num
 You can also opt-in to the Solidity IR compilation pipeline by passing `--via-ir`. Read more about the IR pipeline in the [Solidity docs][ir-pipeline].
 
 By default, the optimizer is enabled and runs for 200 cycles.
+
+##### Conditional Optimizer Usage
+
+Many projects use the solc optimizer, either through the standard compilation pipeline or the IR pipeline. But in some cases, the optimizer can significantly slow down compilation speeds.
+
+A config file for a project using the optimizer may look like this for regular compilation:
+
+```toml
+[profile.default]
+solc-version = "0.8.17"
+optimizer = true
+optimizer-runs = 10_000_000
+```
+
+Or like this for `via-ir`:
+
+```toml
+[profile.default]
+solc-version = "0.8.17"
+via_ir = true
+```
+
+To reduce compilation speeds during development and testing, one approach is to have a `lite` profile that has the optimizer off and use this for development/testing cycle. The updated config file for regular compilation may look like this:
+
+```toml
+[profile.default]
+solc-version = "0.8.17"
+optimizer = true
+optimizer-runs = 10_000_000
+
+[profile.lite]
+optimizer = false
+```
+
+Or like this for `via-ir`:
+
+```toml
+[profile.default]
+solc-version = "0.8.17"
+via_ir = true
+
+[profile.lite.optimizer_details.yulDetails]
+optimizerSteps = ''
+```
+
+When setup like this, `forge build` (or `forge test` / `forge script`) still uses the standard profile, so by default a `forge script` invocation will deploy your contracts with the production setting. Running `FOUNDRY_PROFILE=lite forge build` (and again, same for the test and script commands) will use the lite profile to reduce compilation times.
+
+> There are additional optimizer details you can configure, see the [Additional Optimizer Settings](#additional-optimizer-settings) section below for more info.
 
 #### Artifacts
 
@@ -126,11 +174,14 @@ The model checker will run when `forge build` is invoked, and will show findings
 
 #### Build Options
 
-`--names`  
+`--names`
 &nbsp;&nbsp;&nbsp;&nbsp;Print compiled contract names.
 
-`--sizes`  
+`--sizes`
 &nbsp;&nbsp;&nbsp;&nbsp;Print compiled non-test contract sizes, exiting with code 1 if any of them are above the size limit.
+
+`--skip`
+&nbsp;&nbsp;&nbsp;&nbsp;Skip compilation of non-essential contract directories like test or script (usage `--skip test`).
 
 {{#include core-build-options.md}}
 

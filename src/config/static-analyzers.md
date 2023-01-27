@@ -6,7 +6,22 @@ To test your project using [slither](https://github.com/crytic/slither), here is
 
 ```json
 {
-  "filter_paths": "lib",
+  "filter_paths": "lib"
+}
+```
+
+To run Slither on the entire project, you can use this command:
+
+```sh
+slither .
+```
+
+You do not need to provide remappings via the `solc_remaps` option as Slither will automatically detect remappings in a Foundry project. Slither will invoke `forge` to perform the build.
+
+However, if you want to analyze a specific `.sol` file, then you do need to provide remappings:
+
+```json
+{
   "solc_remaps": [
     "ds-test/=lib/ds-test/src/",
     "forge-std/=lib/forge-std/src/"
@@ -14,22 +29,24 @@ To test your project using [slither](https://github.com/crytic/slither), here is
 }
 ```
 
-Note, you need to update `solc` used by Slither to the same version used by Forge with `solc-select`:
-```ignore
+And you also need to update the `solc` compiler used by Slither to the same version used by Forge with `solc-select`:
+
+```sh
 pip3 install slither-analyzer
 pip3 install solc-select
 solc-select install 0.8.13
 solc-select use 0.8.13
-slither src/Contract.sol
+slither .
 ```
 
-See the [slither wiki](https://github.com/crytic/slither/wiki/Usage) for more information.
+See the [Slither wiki](https://github.com/crytic/slither/wiki/Usage) for more information.
 
-In order to use a custom configuration, such as the sample `slither.config.json` mentioned above, the following command is used as mentioned in the [slither-wiki](https://github.com/crytic/slither/wiki/Usage#configuration-file). By default slither looks for the `slither-config.json` but you can define the path and any other `json` file of your choice:
+In order to use a custom configuration, such as the sample `slither.config.json` mentioned above, the following command is used as mentioned in the [slither-wiki](https://github.com/crytic/slither/wiki/Usage#configuration-file). By default slither looks for the `slither.config.json` but you can define the path and any other `json` file of your choice:
 
-```sh 
-slither --config-file <path>/file.config.json Counter.sol
+```sh
+slither --config-file <path>/file.config.json .
 ```
+
 Example output (Raw):
 
 ```bash 
@@ -45,7 +62,7 @@ Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#public-
 Counter.sol analyzed (1 contracts with 78 detectors), 4 result(s) found
 ```
 
-Slither also has a [github action](https://github.com/marketplace/actions/slither-action) for CI/CD.
+Slither also has a [GitHub Action](https://github.com/marketplace/actions/slither-action) for CI/CD.
 
 ### Mythril
 

@@ -792,6 +792,69 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "omahs",
+      "name": "omahs",
+      "avatar_url": "https://avatars.githubusercontent.com/u/73983677?v=4",
+      "profile": "https://github.com/omahs",
+      "contributions": [
+        "maintenance"
+      ]
+    },
+    {
+      "login": "iFrostizz",
+      "name": "Franfran",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51274081?v=4",
+      "profile": "http://franfran.dev",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "DaniPopes",
+      "name": "DaniPopes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57450786?v=4",
+      "profile": "https://github.com/DaniPopes",
+      "contributions": [
+        "maintenance"
+      ]
+    },
+    {
+      "login": "sbalk",
+      "name": "Stijn Balk",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6737811?v=4",
+      "profile": "https://github.com/sbalk",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "salieflewis",
+      "name": "Salief Lewis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/37086973?v=4",
+      "profile": "https://salieflewis.com/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "ryzhak",
+      "name": "ryzhak",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6339689?v=4",
+      "profile": "https://www.ryzhak.com/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Evalir",
+      "name": "Enrique Ortiz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26014927?v=4",
+      "profile": "https://github.com/Evalir",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -799,5 +862,6 @@
   "projectOwner": "foundry-rs",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }

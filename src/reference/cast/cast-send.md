@@ -23,6 +23,8 @@ The destination (*to*) can be an ENS name or an address.
 `--resend`  
 &nbsp;&nbsp;&nbsp;&nbsp;Reuse the latest nonce of the sending account.
 
+`--create` *code* [*sig* *args...*]  
+&nbsp;&nbsp;&nbsp;&nbsp;Deploy a contract by specifying raw bytecode, in place of specifying a *to* address.
 
 #### Receipt Options
 
@@ -69,7 +71,7 @@ The destination (*to*) can be an ENS name or an address.
     }
     ```
 
-    Structs are encoded as tuples (see [struct encoding](./reference/common/struct-encoding.md))
+    Structs are encoded as tuples (see [struct encoding](./misc/struct-encoding.md))
 
     ```sh
     cast send 0x... "myfunction((address,uint256))" "(0x...,1)"

@@ -89,6 +89,18 @@ For a good example of a base test contract that has helper methods and custom as
 
 Forge will sometimes check for newer Solidity versions that fit your project. To use Forge offline, use the `--offline` flag.
 
+### I'm getting Solc errors
+
+[solc-bin](https://binaries.soliditylang.org/) doesn't offer static builds for apple silicon. Foundry relies on [svm](https://github.com/roynalnaruto/svm-rs) to install native builds for apple silicon.
+
+All solc versions are installed under `~/.svm/`. If you encounter solc related errors, such as `SolcError: ...` please to nuke `~/.svm/` and try again, this will trigger a fresh install and usually resolves the issue.
+
+If you're on apple silion, please ensure the [`z3` thereom prover](https://github.com/Z3Prover/z3
+) is installed: `brew install z3`
+
+> **Note**: native apple silicon builds are only available from `0.8.5` upwards. If you need older versions, you must enable apple silicon rosetta to run them.
+
+
 ### Forge fails in JavaScript monorepos (`pnpm`)
 
 Managers like `pnpm` use symlinks to manage `node_modules` folders.
@@ -120,16 +132,57 @@ error[6275]: ParserError: Source "node_modules/@openzeppelin/contracts/utils/cry
 8 | import "../../../utils/cryptography/draft-EIP712.sol";
 ```
 
-This error happens when `solc` was able to resolve symlinked files, but they're outside of the Foundry workspace (`./contracts`).
+This error happens when `solc` was able to resolve symlinked files, but they're outside the Foundry workspace (`./contracts`).
 
-Adding `node_modules` to `allow_paths` in `foundry.toml` grants solc access to that directory and it will be able to read it:
+Adding `node_modules` to `allow_paths` in `foundry.toml` grants solc access to that directory, and it will be able to read it:
 
 ```toml
 # This translates to `solc --allow-paths ../node_modules`
 allow_paths = ["../node_modules"]
 ```
 
-Note that the path is relative to the Foundry workspace.
+Note that the path is relative to the Foundry workspace. See also [solc allowed-paths](https://docs.soliditylang.org/en/latest/path-resolution.html#allowed-paths)
+
+
+### How to install from source?
+
+> **NOTE:** please ensure your rust version is up-to-date: `rustup update`. Current msrv = "1.62"
+
+```sh
+git clone https://github.com/foundry-rs/foundry
+cd foundry
+# install cast + forge
+cargo install --path ./cli --profile local --bins --locked --force
+# install anvil
+cargo install --path ./anvil --profile local --locked --force
+```
+
+Or via `cargo install --git https://github.com/foundry-rs/foundry --profile local --locked foundry-cli anvil`.
+
+### I'm getting `Permission denied (os error 13)`
+
+If you see an error like 
+
+```console
+Failed to create artifact parent folder "/.../MyProject/out/IsolationModeMagic.sol": Permission denied (os error 13)
+```
+
+Then there's likely a folder permission issue. Ensure `user` has write access in the project root's folder.
+
+It has been [reported](https://github.com/foundry-rs/foundry/issues/3268) that on linux, canonicalizing paths can result in weird paths (`/_1/...`). This can be resolved by nuking the entire project folder and initializing again.
+
+### Connection refused when run `forge build` .
+
+If you're unable to access github URLs called by `forge build` , you will see an error like
+
+```console
+Error: 
+error sending request for url (https://raw.githubusercontent.com/roynalnaruto/solc-builds/ff4ea8a7bbde4488428de69f2c40a7fc56184f5e/macosx/aarch64/list.json): error trying to connect: tcp connect error: Connection refused (os error 61)
+```
+
+Connection failed because access to the URL from your location may be restricted. To solve this, you should set proxy. 
+
+You could run `export http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890` first in the terminal then you will `forge build` successfully.
 
 [tg-support]: https://t.me/foundry_support
 [forge-test]: ./reference/forge/forge-test.md

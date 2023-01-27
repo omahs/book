@@ -116,6 +116,10 @@ The standard methods are based on [this](https://eth.wiki/json-rpc/API) referenc
   
 * `eth_getWork`  
 
+* `eth_subscribe`
+
+* `eth_unsubscribe`  
+
 * `eth_syncing`  
   
 * `eth_submitWork`  
@@ -125,7 +129,10 @@ The standard methods are based on [this](https://eth.wiki/json-rpc/API) referenc
 * `eth_feeHistory`
 
 * `eth_getProof`
-  
+
+* `debug_traceTransaction`  
+Use `anvil --steps-tracing` to get `structLogs`  
+
 * `trace_transaction`
   
 * `trace_block`
@@ -134,13 +141,13 @@ The standard methods are based on [this](https://eth.wiki/json-rpc/API) referenc
 The `anvil_*` namespace is an alias for `hardhat`. For more info, refer to the [Hardhat documentation](https://hardhat.org/hardhat-network/reference#hardhat-network-methods).
 
 `anvil_impersonateAccount`   
-Send transactions impersonating specific account and contract addresses
+Send transactions impersonating an externally owned account or contract. While impersonating a contract, the contract functions can not be called. `anvil_stopImpersonatingAccount` must be used if the contract's functions are to be called again. See also [EIP-3607](https://eips.ethereum.org/EIPS/eip-3607).
 
 `anvil_stopImpersonatingAccount`  
-Stops impersonating an account if previously set with `anvil_impersonateAccount`
+Stops impersonating an account or contract if previously set with `anvil_impersonateAccount`
 
 `anvil_getAutomine`  
-Returns true if automatic mining is enabled, and false
+Returns true if automatic mining is enabled, and false if it is not
 
 `anvil_mine`  
 Mines a series of blocks
@@ -183,6 +190,9 @@ Returns a hex string representing the complete state of the chain. Can be re-imp
 
 `anvil_loadState`
 When given a hex string previously returned by `anvil_dumpState`, merges the contents into the current chain state. Will overwrite any colliding accounts/storage slots.
+
+`anvil_nodeInfo`
+Retrieves the configuration params for the currently running Anvil node.
 
 ##### Special Methods
 The special methods come from Ganache. You can take a look at the documentation [here](https://github.com/trufflesuite/ganache-cli-archive/blob/master/README.md).
@@ -270,6 +280,12 @@ Returns the details of all transactions currently pending for inclusion in the n
 `-p, --port <PORT>`  
 &nbsp;&nbsp;&nbsp;&nbsp; Port number to listen on [default: 8545]
 
+`--steps-tracing`  
+&nbsp;&nbsp;&nbsp;&nbsp; Enable steps tracing used for debug calls returning geth-style traces [aliases: tracing]
+
+`--ipc [<PATH>]`  
+&nbsp;&nbsp;&nbsp;&nbsp; Starts an IPC endpoint at the given `PATH` argument or the default path: unix: `tmp/anvil.ipc`, windows: `\\.\pipe\anvil.ipc` 
+
 `--silent`  
 &nbsp;&nbsp;&nbsp;&nbsp; Don't print anything on startup
 
@@ -287,6 +303,23 @@ Returns the details of all transactions currently pending for inclusion in the n
 `--fork-block-number <BLOCK>`  
 &nbsp;&nbsp;&nbsp;&nbsp; Fetch state from a specific block number over a remote endpoint (Must pass --fork-url in the same command-line)
 
+`--fork-retry-backoff <BACKOFF>`  
+&nbsp;&nbsp;&nbsp;&nbsp; Initial retry backoff on encountering errors.
+
+`--retries <retries>`  
+&nbsp;&nbsp;&nbsp;&nbsp; Number of retry requests for spurious networks (timed out requests). [default value= 5]
+
+`--timeout <timeout>`  
+&nbsp;&nbsp;&nbsp;&nbsp; Timeout in ms for requests sent to remote JSON-RPC server in forking mode. [default value= 45000]
+
+`--compute-units-per-second <CUPS>`  
+&nbsp;&nbsp;&nbsp;&nbsp; Sets the number of assumed available compute units per second for this provider [default value=330]
+&nbsp;&nbsp;&nbsp;&nbsp; See also, [Alchemy Ratelimits](https://github.com/alchemyplatform/alchemy-docs/blob/master/documentation/compute-units.md#rate-limits-cups)
+
+`--no-rate-limit`
+&nbsp;&nbsp;&nbsp;&nbsp; Disables rate limiting for this node's provider. Will always override `--compute-units-per-second` if present. [default value= false]
+&nbsp;&nbsp;&nbsp;&nbsp; See also, [Alchemy Ratelimits](https://github.com/alchemyplatform/alchemy-docs/blob/master/documentation/compute-units.md#rate-limits-cups)
+
 `--no-storage-caching>`  
 &nbsp;&nbsp;&nbsp;&nbsp; Explicitly disables the use of RPC caching. All storage slots are read entirely from the endpoint. This flag overrides the project's configuration file (Must pass --fork-url in the same command-line)
 
@@ -298,6 +331,10 @@ Returns the details of all transactions currently pending for inclusion in the n
 
 `--chain-id <CHAIN_ID>`  
 &nbsp;&nbsp;&nbsp;&nbsp; The chain ID
+
+`--code-size-limit <CODE_SIZE>`  
+&nbsp;&nbsp;&nbsp;&nbsp; EIP-170: Contract code size limit in bytes. Useful to increase this because of tests.
+By default, it is 0x6000 (~25kb)
 
 `--gas-limit <GAS_LIMIT>`  
 &nbsp;&nbsp;&nbsp;&nbsp; The block gas limit
@@ -314,6 +351,12 @@ Returns the details of all transactions currently pending for inclusion in the n
 
 `--host <HOST>`  
 &nbsp;&nbsp;&nbsp;&nbsp; The IP address the server will listen on
+
+`--config-out <OUT_FILE>`  
+&nbsp;&nbsp;&nbsp;&nbsp; Writes output of `anvil` as json to user-specified file
+
+`--prune-history`  
+&nbsp;&nbsp;&nbsp;&nbsp; Don't keep full chain history
 
 ### EXAMPLES
 1. Set the number of accounts to 15 and their balance to 300 ETH
