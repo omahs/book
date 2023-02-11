@@ -13,7 +13,7 @@ function createFork(string calldata urlOrAlias, uint256 block) external returns 
 ```
 
 ```solidity
-// Creates a new fork with the given endpoint and at the block the given transaction was mined in, and replays all transaction mined in the block before the transaction
+// Creates a new fork with the given endpoint and at the block the given transaction was mined in, and replays all transactions mined in the block before the transaction
 function createFork(string calldata urlOrAlias, bytes32 transaction) external returns (uint256);
 ```
 
