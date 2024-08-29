@@ -14,7 +14,7 @@ Set an environment variable `key=value`.
 >
 > Environment variables set by a process are only accessible by itself and its child
 > processes. Thus, calling `setEnv` will only modify environment variables of the currently running
-> `forge` process, and won't affect the shell (`forge`'s parent process), i.e., the they won't persist
+> `forge` process, and won't affect the shell (`forge`'s parent process), i.e., they won't persist
 > after the `forge` process exit.
 
 ### Tips
